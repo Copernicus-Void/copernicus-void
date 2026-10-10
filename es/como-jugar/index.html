@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cómo jugar al Sudoku — Reglas y técnicas | Sudoku Grid</title>
+<meta name="description" content="Aprende a jugar al Sudoku: reglas, cómo empezar, escaneo, candidatos únicos, notas a lápiz y parejas. Una guía clara para principiantes.">
+<meta name="theme-color" content="#f2f4fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10131c" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://YOUR-USERNAME.github.io/voidfont-studio/es/como-jugar/">
+<link rel="alternate" hreflang="en" href="https://YOUR-USERNAME.github.io/voidfont-studio/how-to-play/">
+<link rel="alternate" hreflang="es" href="https://YOUR-USERNAME.github.io/voidfont-studio/es/como-jugar/">
+<link rel="alternate" hreflang="x-default" href="https://YOUR-USERNAME.github.io/voidfont-studio/how-to-play/">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sudoku Grid">
+<meta property="og:title" content="Cómo jugar al Sudoku — Reglas y técnicas | Sudoku Grid">
+<meta property="og:description" content="Aprende a jugar al Sudoku: reglas, cómo empezar, escaneo, candidatos únicos, notas a lápiz y parejas. Una guía clara para principiantes.">
+<meta property="og:url" content="https://YOUR-USERNAME.github.io/voidfont-studio/es/como-jugar/">
+<meta property="og:image" content="https://YOUR-USERNAME.github.io/voidfont-studio/assets/img/og-image.jpg">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+<header class="site-header"><div class="wrap nav">
+<a class="brand" href="../../es/"><img src="../../assets/img/icon-192.png" width="38" height="38" alt=""><span>Sudoku Grid</span></a>
+<nav class="nav-links" aria-label="Main"><a href="../../es/">Inicio</a><a href="../../es/como-jugar/" aria-current="page">Cómo jugar</a><a href="../../es/jugar/">Jugar online</a><a href="../../es/privacidad/">Privacidad</a><a class="lang" href="../../how-to-play/" hreflang="en" lang="en" title="English">EN</a></nav>
+</div></header>
+<main id="main">
+<div class="wrap page"><div class="prose"><h1 style="font-size:clamp(2rem,5vw,3rem)">Cómo jugar al Sudoku</h1>
+
+<p>El Sudoku es un juego de lógica que se juega en una cuadrícula de 9×9. No necesitas matemáticas: se trata de detectar dónde pueden y dónde no pueden ir los números. Esta guía te lleva desde las reglas hasta las primeras técnicas, que resuelven la mayoría de tableros fáciles y medios.</p>
+<nav class="toc" aria-label="Contenido"><strong>En esta guía</strong><ol>
+<li><a href="#reglas">Las reglas</a></li><li><a href="#empezar">Cómo empezar</a></li><li><a href="#escaneo">Escaneo</a></li>
+<li><a href="#unicos">Candidatos únicos</a></li><li><a href="#notas">Notas a lápiz</a></li><li><a href="#parejas">Parejas</a></li>
+<li><a href="#errores">Errores comunes</a></li><li><a href="#consejos">Consejos para mejorar</a></li></ol></nav>
+
+<h2 id="reglas">Las reglas</h2>
+<p>La cuadrícula tiene 81 casillas, divididas en nueve bloques de 3×3. Algunas ya traen números (las "pistas iniciales"). Completa el resto de modo que:</p>
+<ul><li>cada <strong>fila</strong> contenga los dígitos del 1 al 9 exactamente una vez,</li><li>cada <strong>columna</strong> contenga los dígitos del 1 al 9 exactamente una vez,</li><li>cada <strong>bloque de 3×3</strong> contenga los dígitos del 1 al 9 exactamente una vez.</li></ul>
+<p>Un tablero bien hecho tiene una única solución y siempre se puede resolver con lógica. En Sudoku Grid se comprueba que cada tablero tenga una sola solución, así que nunca tienes que adivinar.</p>
+
+<h2 id="empezar">Cómo empezar</h2>
+<p>Empieza donde haya más información: filas, columnas y bloques casi llenos. Pregúntate "¿qué número falta aquí?" y busca la casilla donde puede ir. Fíjate también en los dígitos que aparecen muchas veces en el tablero (por ejemplo, seis o siete 5): son los más fáciles de completar.</p>
+
+<h2 id="escaneo">Técnica 1: escaneo</h2>
+<p>Elige un dígito, por ejemplo el 7. Localiza todos los 7 del tablero. Cada uno descarta toda su fila, columna y bloque. Mira un bloque que aún no tenga 7: si las filas y columnas de otros 7 bloquean todas las casillas menos una, el 7 debe ir en esa casilla. Repite con cada dígito; cada pasada suele revelar algunos números nuevos.</p>
+
+<h2 id="unicos">Técnica 2: candidatos únicos</h2>
+<h3>Candidato único desnudo</h3>
+<p>Una casilla donde solo es posible <em>un</em> dígito, porque los otros ocho ya aparecen en su fila, columna o bloque. Coloca ese dígito.</p>
+<h3>Candidato único oculto</h3>
+<p>Un dígito que solo puede ir en <em>una</em> casilla de una fila, columna o bloque, aunque esa casilla admita otros dígitos. Mira una fila y pregúntate "¿dónde puede ir el 4?". Si solo hay un sitio, esa es la respuesta.</p>
+
+<h2 id="notas">Notas a lápiz</h2>
+<p>Cuando se acaban los números fáciles, escribe pequeños candidatos en las casillas (notas a lápiz). Te permiten ver patrones que cuesta mantener en la cabeza. Cada vez que coloques un número, quítalo de las notas de todas las casillas de su fila, columna y bloque. En Sudoku Grid esta limpieza es automática, y el tablero resalta los números iguales para ayudarte.</p>
+
+<h2 id="parejas">Técnica 3: parejas desnudas</h2>
+<p>Si dos casillas de la misma fila, columna o bloque tienen exactamente los mismos dos candidatos (por ejemplo 2 y 6), esos dos dígitos deben ocupar esas dos casillas. Puedes quitar con seguridad el 2 y el 6 de las notas de las demás casillas de esa fila, columna o bloque. Esto suele desbloquear un tablero atascado.</p>
+
+<h2 id="errores">Errores comunes</h2>
+<ul><li><strong>Adivinar.</strong> Si te atascas, busca otra técnica en lugar de apostar. Adivinar suele provocar una cadena de errores.</li>
+<li><strong>Olvidar los bloques.</strong> Los principiantes revisan filas y columnas, pero olvidan el bloque de 3×3.</li>
+<li><strong>No actualizar las notas.</strong> Las notas desactualizadas crean candidatos falsos.</li>
+<li><strong>Ir con prisa.</strong> Un solo dígito incorrecto puede volver imposible el resto. Tómate tu tiempo.</li></ul>
+
+<h2 id="consejos">Consejos para mejorar</h2>
+<ul><li>Empieza en <strong>Fácil</strong> y sube de nivel cuando puedas terminar sin pistas.</li>
+<li>Usa las pistas para aprender: después de una pista, pregúntate por qué ese dígito va ahí.</li>
+<li>Juega un poco cada día; el reconocimiento de patrones mejora rápido con la práctica.</li>
+<li>Si te atascas, haz un descanso corto. Una mirada nueva suele mostrar el siguiente movimiento.</li></ul>
+<div class="notice"><strong>Pruébalo ahora.</strong> Haz clic o toca una casilla y luego un número. Con teclado, usa <kbd>1</kbd>–<kbd>9</kbd>, <kbd>N</kbd> para notas y <kbd>Z</kbd> para deshacer.</div>
+
+<p><a class="btn btn-primary" href="../../es/jugar/">Jugar en el navegador</a></p></div></div>
+</main>
+<footer class="site-footer"><div class="wrap footer-grid">
+<div><strong>Sudoku Grid</strong> · VoidFont Studio<br>Sudoku limpio y relajante para tu móvil y tu navegador.<br>© 2026 VoidFont Studio. Todos los derechos reservados.</div>
+<div><ul><li><a href="../../es/">Inicio</a></li><li><a href="../../es/como-jugar/">Cómo jugar</a></li><li><a href="../../es/jugar/">Jugar online</a></li><li><a href="../../es/privacidad/">Privacidad</a></li><li><a href="mailto:your-email@example.com">Contacto</a></li></ul></div>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f2f4fa">
+<title>Sudoku Grid</title>
+<style>
+:root {
+	--bg: #f2f4fa; --surface: #ffffff; --text: #1b2140; --muted: #6f7795;
+	--accent: #3a5bd9; --soft: #dfe7ff; --track: #dde2f0; --err: #e03131;
+}
+:root[data-theme="dark"] {
+	--bg: #10131c; --surface: #1b2030; --text: #e9ecfb; --muted: #8d96b8;
+	--accent: #6f8fff; --soft: #2a3566; --track: #262c42; --err: #ff6b6b;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme]) {
+		--bg: #10131c; --surface: #1b2030; --text: #e9ecfb; --muted: #8d96b8;
+		--accent: #6f8fff; --soft: #2a3566; --track: #262c42; --err: #ff6b6b;
+	}
+}
+html, body, #canvas { margin: 0; padding: 0; border: 0; }
+body {
+	background-color: var(--bg);
+	color: var(--text);
+	overflow: hidden;
+	touch-action: none;
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-user-select: none; user-select: none;
+}
+#canvas { display: block; }
+#canvas:focus { outline: none; }
+
+/* ---------- pantalla de arranque ---------- */
+#boot {
+	position: absolute; inset: 0;
+	display: flex; flex-direction: column; align-items: center; justify-content: center;
+	gap: 14px; background: var(--bg); z-index: 5;
+	transition: opacity .35s ease;
+}
+#boot.hide { opacity: 0; pointer-events: none; }
+#logo { width: min(34vmin, 190px); height: auto; margin-bottom: 10px; }
+#logo rect { opacity: 0; transform-box: fill-box; transform-origin: center; animation: pop .5s cubic-bezier(.2,1.4,.4,1) forwards; }
+@keyframes pop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: scale(1); } }
+h1 { margin: 0; font-size: clamp(30px, 8vmin, 52px); font-weight: 800; letter-spacing: -.5px; }
+.by { margin: 0; font-size: clamp(14px, 3.4vmin, 20px); color: var(--muted); }
+.by b { color: var(--accent); }
+#progress {
+	width: min(60vw, 280px); height: 8px; border-radius: 99px; background: var(--track);
+	overflow: hidden; margin-top: 18px;
+}
+#bar { height: 100%; width: 0%; border-radius: 99px; background: var(--accent); transition: width .15s linear; }
+#bar.indeterminate { width: 35%; animation: slide 1.1s ease-in-out infinite; }
+@keyframes slide { 0% { margin-left: -35%; } 100% { margin-left: 100%; } }
+#play {
+	display: none; margin-top: 12px; padding: 14px 54px; border: 0; border-radius: 18px;
+	font: inherit; font-size: clamp(18px, 4vmin, 24px); font-weight: 700;
+	color: #fff; background: var(--accent); cursor: pointer;
+	box-shadow: 0 6px 18px rgba(58, 91, 217, .35); transition: transform .08s ease;
+}
+#play:active { transform: scale(.96); }
+#play:disabled { opacity: .7; cursor: default; }
+#notice {
+	display: none; max-width: min(88vw, 460px); text-align: center; line-height: 1.4;
+	padding: 14px 18px; border-radius: 14px; background: var(--surface);
+	border: 1px solid var(--err); color: var(--text); font-size: 15px;
+}
+</style>
+<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
+
+</head>
+<body>
+<canvas id="canvas">Your browser does not support the canvas tag.</canvas>
+<noscript>Your browser does not support JavaScript.</noscript>
+
+<div id="boot">
+	<svg id="logo" viewBox="0 0 100 100" aria-hidden="true">
+		<g id="tiles"></g>
+	</svg>
+	<h1>Sudoku Grid</h1>
+	<p class="by"><span id="by">by</span> <b>VoidFont Studio</b></p>
+	<div id="progress"><div id="bar" class="indeterminate"></div></div>
+	<button id="play" type="button">Play</button>
+	<div id="notice"></div>
+</div>
+
+<script>
+// Tema elegido en el juego (si existe); si no, el del sistema.
+try { const t = localStorage.getItem('sg_dark'); if (t === '1' || t === '0') document.documentElement.dataset.theme = t === '1' ? 'dark' : 'light'; } catch (e) {}
+</script>
+<script src="index.js"></script>
+<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":599104,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_THREADS_ENABLED = false;
+
+(function () {
+	// ---------- textos según el idioma del navegador ----------
+	const es = (navigator.language || 'en').toLowerCase().startsWith('es');
+	const T = es
+		? { play: 'Jugar', missing: 'Tu navegador no puede ejecutar este juego.\nFalta soporte para:', err: 'No se pudo cargar el juego.' }
+		: { play: 'Play', missing: 'Your browser cannot run this game.\nMissing support for:', err: 'The game could not be loaded.' };
+	document.documentElement.lang = es ? 'es' : 'en';
+	document.getElementById('play').textContent = T.play;
+
+	// ---------- logo: 9 fichas ----------
+	const digits = [5, 3, 8, 6, 9, 1, 2, 7, 4];
+	const g = document.getElementById('tiles');
+	const css = getComputedStyle(document.documentElement);
+	for (let i = 0; i < 9; i++) {
+		const r = Math.floor(i / 3), c = i % 3;
+		const x = 3 + c * 32, y = 3 + r * 32;
+		const center = i === 4, soft = (r + c) % 2 === 0;
+		const fill = center ? 'var(--accent)' : soft ? 'var(--soft)' : 'var(--surface)';
+		const tcol = center ? '#fff' : soft ? 'var(--accent)' : 'var(--text)';
+		const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+		rect.setAttribute('x', x); rect.setAttribute('y', y); rect.setAttribute('width', 28); rect.setAttribute('height', 28);
+		rect.setAttribute('rx', 7); rect.setAttribute('fill', fill);
+		rect.style.animationDelay = ((r + c) * 0.08) + 's';
+		rect.style.filter = 'drop-shadow(0 1px 1.5px rgba(30,40,90,.25))';
+		g.appendChild(rect);
+		const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+		t.setAttribute('x', x + 14); t.setAttribute('y', y + 20); t.setAttribute('text-anchor', 'middle');
+		t.setAttribute('font-size', 17); t.setAttribute('font-weight', 700); t.setAttribute('fill', tcol);
+		t.setAttribute('font-family', 'system-ui, Arial, sans-serif');
+		t.textContent = digits[i];
+		g.appendChild(t);
+	}
+
+	const boot = document.getElementById('boot');
+	const bar = document.getElementById('bar');
+	const progress = document.getElementById('progress');
+	const playBtn = document.getElementById('play');
+	const notice = document.getElementById('notice');
+
+	function fail(msg) {
+		progress.style.display = 'none';
+		playBtn.style.display = 'none';
+		notice.textContent = msg;
+		notice.style.display = 'block';
+	}
+
+	function onProgress(current, total) {
+		if (current > 0 && total > 0) {
+			bar.classList.remove('indeterminate');
+			bar.style.width = Math.min(100, (current / total) * 100) + '%';
+		} else {
+			bar.classList.add('indeterminate');
+		}
+	}
+
+	GODOT_CONFIG.onProgress = onProgress;
+	const engine = new Engine(GODOT_CONFIG);
+
+	const missing = Engine.getMissingFeatures({ threads: GODOT_THREADS_ENABLED });
+	if (missing.length !== 0) {
+		fail(T.missing + '\n' + missing.join('\n'));
+		notice.style.whiteSpace = 'pre-line';
+		return;
+	}
+
+	// 1) Se descarga el motor (lo más pesado) mientras se ve el logo.
+	engine.init(GODOT_CONFIG.executable).then(function () {
+		bar.classList.remove('indeterminate');
+		bar.style.width = '100%';
+		setTimeout(function () { progress.style.display = 'none'; playBtn.style.display = 'block'; }, 250);
+	}, function (err) { console.error(err); fail(T.err); });
+
+	// 2) El juego arranca con un toque en "Play": así el navegador permite el audio.
+	playBtn.addEventListener('click', function () {
+		playBtn.disabled = true;
+		engine.startGame().then(function () {
+			boot.classList.add('hide');
+			setTimeout(function () { boot.remove(); }, 450);
+			const cv = document.getElementById('canvas');
+			if (cv) { cv.focus(); }
+		}, function (err) { console.error(err); fail(T.err); });
+	});
+}());
+</script>
+</body>
+</html>
+
