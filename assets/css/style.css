@@ -1,4 +1,4 @@
-/* Sudoku Grid — VoidFont Studio. Sin frameworks ni fuentes externas: carga rápida y sin rastreo. */
+/* Sudoku Grid — Copernicus Void. Sin frameworks ni fuentes externas: carga rápida y sin rastreo. */
 :root {
   --bg: #f2f4fa; --surface: #ffffff; --surface-2: #e9edf8; --text: #1b2140; --muted: #5a6382;
   --accent: #3a5bd9; --accent-2: #5b7bff; --on-accent: #ffffff; --soft: #dfe7ff; --line: #dde2f0;
@@ -119,7 +119,7 @@ details p { color: var(--muted); padding-bottom: 14px; margin: 0; }
 
 /* ---------- páginas de texto ---------- */
 .page { padding: clamp(32px, 6vw, 70px) 0; }
-.prose { max-width: 760px; }
+.prose { max-width: 760px; margin-inline: auto; }
 .prose h2 { margin-top: 1.7em; font-size: 1.55rem; }
 .prose h3 { margin-top: 1.4em; }
 .prose ul, .prose ol { padding-left: 1.3em; margin: 0 0 1em; }
@@ -145,3 +145,10 @@ kbd { background: var(--surface); border: 1px solid var(--line); border-bottom-w
 .footer-grid a { color: var(--muted); }
 .footer-grid a:hover { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* texto de licencias */
+pre.license { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; white-space: pre-wrap; font-size: .82rem; line-height: 1.5; overflow-x: auto; max-height: 420px; overflow-y: auto; }
+code { background: var(--surface-2); padding: 1px 6px; border-radius: 6px; font-size: .9em; }
+
+/* al saltar a una sección (#us, #ads…), el título no queda tapado por la cabecera fija */
+h2[id], h3[id] { scroll-margin-top: 90px; }
